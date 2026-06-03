@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
+  # Database for statistics
   statistics-db:
-    image: postgres:16-alpine
+    image: postgres:15-alpine
     container_name: statistics-db
     environment:
       POSTGRES_DB: statistics
@@ -19,9 +18,29 @@ services:
       retries: 5
     networks:
       - explore-with-me-network
-    restart: unless-stopped  # Исправлено с unless-failed на unless-stopped
+    restart: unless-stopped
 
-  statistics-server:
+  main-db:
+    image: postgres:15-alpine
+    container_name: main-db
+    environment:
+      POSTGRES_DB: main_service
+      POSTGRES_USER: main_user
+      POSTGRES_PASSWORD: main_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - main-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U main_user -d main_service" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - explore-with-me-network
+    restart: unless-stopped
+
+  stats-server:
     build:
       context: .
       dockerfile: statistics-server.Dockerfile
@@ -32,10 +51,32 @@ services:
       statistics-db:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://statistics-db:5432/statistics
       SPRING_DATASOURCE_USERNAME: stat_user
       SPRING_DATASOURCE_PASSWORD: stat_password
+    networks:
+      - explore-with-me-network
+    restart: unless-stopped
+
+  ewm-service:
+    build:
+      context: .
+      dockerfile: main-service.Dockerfile
+    container_name: main-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      main-db:
+        condition: service_healthy
+      stats-server:
+        condition: service_started
+    environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://main-db:5432/main_service
+      SPRING_DATASOURCE_USERNAME: main_user
+      SPRING_DATASOURCE_PASSWORD: main_password
+      STATISTICS_SERVER_URL: http://statistics-server:9090
     networks:
       - explore-with-me-network
     restart: unless-stopped
@@ -46,3 +87,4 @@ networks:
 
 volumes:
   statistics-db-data:
+  main-db-data:

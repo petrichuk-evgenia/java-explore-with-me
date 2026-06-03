@@ -9,4 +9,4 @@ USER spring:spring
 
 EXPOSE 9090
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "app.jar"]
