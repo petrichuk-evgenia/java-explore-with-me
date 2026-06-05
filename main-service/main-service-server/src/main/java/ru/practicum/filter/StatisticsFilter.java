@@ -58,11 +58,11 @@ public class StatisticsFilter implements Filter {
         // Отслеживаем только определенные эндпоинты
         return uri != null && (
                 uri.equals("/events") ||
-                uri.startsWith("/events/") ||
-                uri.equals("/categories") ||
-                uri.startsWith("/categories/") ||
-                uri.equals("/compilations") ||
-                uri.startsWith("/compilations/")
+                        uri.startsWith("/events/") ||
+                        uri.equals("/categories") ||
+                        uri.startsWith("/categories/") ||
+                        uri.equals("/compilations") ||
+                        uri.startsWith("/compilations/")
         );
     }
 }

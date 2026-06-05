@@ -40,7 +40,7 @@ public class StatisticsClientImpl implements StatisticsClient {
             log.debug("Statistics server URL is not configured or default, skipping saveHit for URI: {}", hit.getUri());
             return;
         }
-        
+
         log.debug("Attempting to save hit: app={}, uri={}, ip={}, timestamp={}", hit.getApp(), hit.getUri(), hit.getIp(), hit.getTimestamp());
         String url = serverUrl + "/hit";
 
@@ -76,7 +76,7 @@ public class StatisticsClientImpl implements StatisticsClient {
             log.debug("Statistics server URL is not configured or default, returning empty stats");
             return java.util.Collections.emptyList();
         }
-        
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverUrl + "/stats")
                 .queryParam("start", start.format(formatter))
                 .queryParam("end", end.format(formatter))

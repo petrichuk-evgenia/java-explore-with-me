@@ -1,5 +1,6 @@
 package ru.practicum;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -8,8 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -31,7 +30,7 @@ public class ErrorHandler {
                 .map(FieldError::getDefaultMessage)
                 .findFirst()
                 .orElse("Invalid request");
-        
+
         ErrorResponse response = new ErrorResponse(
                 "Validation Error",
                 errorMessage,

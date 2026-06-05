@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UpdateEventAdminRequest {
+
     @Size(min = 20, max = 2000)
     private String annotation;
 
@@ -37,4 +38,9 @@ public class UpdateEventAdminRequest {
 
     @Size(min = 3, max = 120)
     private String title;
+
+    public enum StateAction {
+        PUBLISH_EVENT,
+        REJECT_EVENT
+    }
 }
