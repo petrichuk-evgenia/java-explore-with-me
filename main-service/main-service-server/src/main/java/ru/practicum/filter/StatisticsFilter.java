@@ -24,7 +24,8 @@ public class StatisticsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        if (request instanceof HttpServletRequest httpServletRequest) {
+        if (request instanceof HttpServletRequest) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String uri = httpServletRequest.getRequestURI();
             String method = httpServletRequest.getMethod();
 
